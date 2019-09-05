@@ -18,8 +18,8 @@ router.get('/new-entry', (req, res) => {
 
 router.post('/new-entry', (req, res) => {
 
-    const {title, author, image, description} = req.body;
-    if( !title || !author || !image || !description){
+    const { title, author, image, description } = req.body;
+    if (!title || !author || !image || !description) {
         res.status(400).send('Entries must have a title and description');
         return;
     }
@@ -32,22 +32,69 @@ router.post('/new-entry', (req, res) => {
     };
 
     books.push(newBook);
-   
+
     const json_books = JSON.stringify(books);
 
-    fs.writeFileSync('src/books.json' , json_books, 'utf-8');    
-    
-    res.send('Book Save!!');   
+    fs.writeFileSync('src/books.json', json_books, 'utf-8');
+
+    res.redirect('/');
+
 });
 
 
 router.get('/delete/:id', (req, res) => {
-    //console.log(req.params);
-    //res.send('received');
+
     books = books.filter(book => book.id != req.params.id);
     const json_books = JSON.stringify(books);
-    fs.writeFileSync('src/books.json' , json_books, 'utf-8');    
+    fs.writeFileSync('src/books.json', json_books, 'utf-8');
     res.redirect('/');
+
+});
+
+router.get('/edit-entry/:id', (req, res) => {
+
+    let book = books.find( book => book.id === req.params.id);
+
+    res.render('edit-entry.ejs', {
+        id: book.id,
+        author : book.author,
+        title : book.title,
+        description : book.description,
+        image : book.image
+    })
+
+});
+
+router.post('/edit-entry', (req, res) => {
+
+    const { id, title, author, image, description } = req.body;
+    if (!title || !author || !image || !description) {
+        res.status(400).send('Entries must have a title and description');
+        return;
+    }
+    let updateBook = {
+        id: uuid(),
+        title,
+        author,
+        image,
+        description
+    };
+
+    books = books.filter(book => book.id != req.params.id);
+
+    books.push(updateBook);
+
+    const json_updatebooks = JSON.stringify(books);
+    fs.writeFileSync('src/books.json', json_updatebooks, 'utf-8');
+    res.redirect('/');
+
+
+    const json_books = JSON.stringify(books);
+
+    fs.writeFileSync('src/books.json', json_books, 'utf-8');
+
+    res.redirect('/');
+
 });
 
 module.exports = router;

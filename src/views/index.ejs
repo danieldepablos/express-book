@@ -22,6 +22,9 @@
                         <p> <%= book.description %> </p>
                     </div>
                     <div class="card-footer">
+                        <a href="/edit-entry/<%= book.id %>" class="btn btn-primary">
+                            Edit
+                        </a>  
                         <a href="/delete/<%= book.id %>" class="btn btn-danger">
                             Delete
                         </a>  
