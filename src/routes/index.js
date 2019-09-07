@@ -80,18 +80,13 @@ router.post('/edit-entry', (req, res) => {
         description
     };
 
-    books = books.filter(book => book.id != req.params.id);
-
+    books = books.filter(book => book.id != id);
+ 
     books.push(updateBook);
 
     const json_updatebooks = JSON.stringify(books);
+
     fs.writeFileSync('src/books.json', json_updatebooks, 'utf-8');
-    res.redirect('/');
-
-
-    const json_books = JSON.stringify(books);
-
-    fs.writeFileSync('src/books.json', json_books, 'utf-8');
 
     res.redirect('/');
 
